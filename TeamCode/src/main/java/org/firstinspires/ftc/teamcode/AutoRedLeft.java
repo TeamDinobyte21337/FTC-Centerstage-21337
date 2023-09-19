@@ -174,7 +174,7 @@ public class AutoRedLeft extends LinearOpMode {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
 
-        move(1,0,0,1000);
+        // move(1,0,0,1000);
 
 
 
