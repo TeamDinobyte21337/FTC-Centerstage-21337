@@ -27,21 +27,30 @@ public class TeleOpSmall extends OpMode { // first bracket
 
     Servo rightServo;
 
-    double ticks = 1425.1;
-    double newTarget;
+    Servo launcherServo;
 
+    double sliderTicks = 1425.1;
+    double sliderTarget;
+
+    double armTicks = -537.7;
     double armTarget;
+
     public void init() { // second start bracket
 
         frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+
         horizontalMotor =  hardwareMap.dcMotor.get("horizontalMotor");
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         verticalMotor =  hardwareMap.dcMotor.get("verticalMotor");
+        verticalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         leftServo = hardwareMap.servo.get("leftServo");
         rightServo = hardwareMap.servo.get("rightServo");
+        launcherServo = hardwareMap.servo.get("launcherServo");
 
         // endocers for slider
         horizontalMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -49,16 +58,13 @@ public class TeleOpSmall extends OpMode { // first bracket
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
         // end of encoders for slider
+
+        // start of encoders
         verticalMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // verticalMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         verticalMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
         // encoders for arm
-
-
-
-
-
 
 
     } // second end bracket
@@ -69,15 +75,13 @@ public class TeleOpSmall extends OpMode { // first bracket
         double forward = -.80*gamepad1.left_stick_y;
         double strafe = - .60*gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
-        double arm = .85*gamepad2.left_stick_y;
-        double slider = .85*gamepad2.right_stick_y;
+
 
 
         frontLeftMotor.setPower(-forward + strafe - turn);
         frontRightMotor.setPower(forward + strafe - turn);
         backLeftMotor.setPower(- forward - strafe - turn);
         backRightMotor.setPower( forward - strafe - turn);
-        verticalMotor.setPower(-arm);
 
         // enocder mapping buttons for slider
         if(gamepad2.left_bumper) {
@@ -92,16 +96,20 @@ public class TeleOpSmall extends OpMode { // first bracket
             full(0.725);
         }
 
-        telemetry.addData("Motor ticks: ", horizontalMotor.getCurrentPosition());
+        telemetry.addData("Slider ticks: ", horizontalMotor.getCurrentPosition());
        // encoder mapping button end for slider
 
 
         // encoder mapping button start for arm
-        if(gamepad2.dpad_up) {
-            max(1.45);
+        if(gamepad2.dpad_down) {
+            max(.45);
         }
 
-        if(gamepad2.dpad_down) {
+        if(gamepad2.dpad_left) {
+            max(.20);
+        }
+
+        if(gamepad2.dpad_up) {
              begin();
         }
 
@@ -121,6 +129,13 @@ public class TeleOpSmall extends OpMode { // first bracket
         }
       // claw servos mapping ending
 
+      // launcher servo mapping start
+         if (gamepad2.right_stick_button) {
+             launcherServo.setPosition(1);
+         }
+      // launcher servo mapping end
+
+
 
 
     } // end of loop
@@ -130,8 +145,8 @@ public class TeleOpSmall extends OpMode { // first bracket
 
     // ticks loop for slider start
      public void full (double turnage) {
-        newTarget = ticks*turnage;
-         horizontalMotor.setTargetPosition((int)newTarget);
+        sliderTarget = sliderTicks*turnage;
+         horizontalMotor.setTargetPosition((int)sliderTarget);
          horizontalMotor.setPower(.85);
          horizontalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
      }
@@ -146,9 +161,9 @@ public class TeleOpSmall extends OpMode { // first bracket
 
     // ticks loop for arm start
     public void max (double turnage) {
-        armTarget = ticks*turnage;
+        armTarget = armTicks*turnage;
         verticalMotor.setTargetPosition((int)armTarget);
-        verticalMotor.setPower(.85);
+        verticalMotor.setPower(.4);
         verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
