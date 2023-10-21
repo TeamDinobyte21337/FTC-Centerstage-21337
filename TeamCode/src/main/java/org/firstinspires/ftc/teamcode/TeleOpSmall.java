@@ -28,7 +28,7 @@ public class TeleOpSmall extends OpMode { // first bracket
     // hook motors start
 
    // claw servo start
-    Servo leftServo;
+    //Servo leftServo;
     Servo rightServo;
     // claw servo end
 
@@ -42,7 +42,7 @@ public class TeleOpSmall extends OpMode { // first bracket
     // encoder defining for slider end
 
     // encoder defining for arm start
-    double armTicks = -537.7;
+    double armTicks = 860.32;
     double armTarget;
     // encoder defining for arm end
 
@@ -84,8 +84,8 @@ public class TeleOpSmall extends OpMode { // first bracket
         // hook motor mapping end
 
         // claw servo mapping start
-        leftServo = hardwareMap.servo.get("leftServo");
-        rightServo = hardwareMap.servo.get("rightServo");
+        //leftServo = hardwareMap.servo.get("leftServo");
+       rightServo = hardwareMap.servo.get("rightServo");
         // claw servo mapping end
 
         // launcher servo mapping start
@@ -120,7 +120,7 @@ public class TeleOpSmall extends OpMode { // first bracket
         // teleop movement motor directions start
         frontLeftMotor.setPower(-forward + strafe - turn);
         frontRightMotor.setPower(forward + strafe - turn);
-        backLeftMotor.setPower(- forward - strafe - turn);
+        backLeftMotor.setPower(-forward - strafe - turn);
         backRightMotor.setPower( forward - strafe - turn);
         // teleop movement motor directions end
 
@@ -143,11 +143,11 @@ public class TeleOpSmall extends OpMode { // first bracket
 
         // encoder mapping button for arm start
         if(gamepad2.dpad_down) {
-            max(.45);
+            max(1);
         }
 
         if(gamepad2.dpad_left) {
-            max(.20);
+            max(.7);
         }
 
         if(gamepad2.dpad_up) {
@@ -169,14 +169,14 @@ public class TeleOpSmall extends OpMode { // first bracket
         // encoder mapping button for arm hook end
 
 
-       // claw servos mapping start
+       // claw servos mapping start // a opens b closes
         if (gamepad2.a){
-            leftServo.setPosition(1);
-            rightServo.setPosition(0);
+            //leftServo.setPosition(1);
+            rightServo.setPosition(.58);
         }
         if (gamepad2.b){
-            leftServo.setPosition(.83);
-            rightServo.setPosition(.17);
+            //leftServo.setPosition(.83);
+           rightServo.setPosition(.4);
         }
       // claw servos mapping ending
 
@@ -215,13 +215,13 @@ public class TeleOpSmall extends OpMode { // first bracket
     public void max (double turnage) {
         armTarget = armTicks*turnage;
         verticalMotor.setTargetPosition((int)armTarget);
-        verticalMotor.setPower(.4);
+        verticalMotor.setPower(1);
         verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void begin(){
         verticalMotor.setTargetPosition(0);
-        verticalMotor.setPower(0.9);
+        verticalMotor.setPower(1);
         verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     // ticks loop for arm end
@@ -230,7 +230,7 @@ public class TeleOpSmall extends OpMode { // first bracket
     public void upForRight(double turnage) {
         hookTargetRight = hookTicksRight*turnage;
         hookFrontRightMotor.setTargetPosition((int)hookTargetRight);
-        hookFrontRightMotor.setPower(.6);
+        hookFrontRightMotor.setPower(-.4);
         hookFrontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
@@ -238,7 +238,7 @@ public class TeleOpSmall extends OpMode { // first bracket
     public void upForLeft(double turnage) {
         hookTargetLeft = hookTicksLeft*turnage;
         hookFrontLeftMotor.setTargetPosition((int)hookTargetLeft);
-        hookFrontLeftMotor.setPower(.6);
+        hookFrontLeftMotor.setPower(.4);
         hookFrontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
