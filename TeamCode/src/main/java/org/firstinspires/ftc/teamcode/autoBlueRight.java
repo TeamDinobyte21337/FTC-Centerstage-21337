@@ -46,14 +46,14 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
         // on startup we execute the code below this
         waitForStart();
 
-        encoderMovement(600, 0,0,.5,1000);
-
+        encoderMovement(2200, 0,0,.5);
+        encoderMovement(0, 4300,0,.5);
     }
 
 
 // Thats a lot of code, so lets turn this into a function so it becomes one line
         // We need these parameters to determine whether or not we are going forward, strafing, or rotating
-        public void encoderMovement(int forward, int strafe, int turn, double power, int ms){
+        public void encoderMovement(int forward, int strafe, int turn, double power){
 
             // This is still needed from earlier
             frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,13 +74,18 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
             backRightMotor.setPower(power);
 
 
+            frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy()){
 
             }
 
             // we add a delay based off of our ms parameter
-            sleep(ms);
+            sleep(50);
         }
 
 
