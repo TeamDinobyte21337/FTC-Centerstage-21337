@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 // This is an example of how to use encoders
 // Encoders are a way to treat motors like servos
@@ -24,6 +25,20 @@ public class autoRedRight extends LinearOpMode{ // first bracket
     DcMotor verticalMotor;
     // arm and slider motor end
 
+    // claw servo start
+    Servo rightServo;
+    // claw servo end
+
+    // encoder defining for slider start
+    double sliderTicks = 1425.1;
+    double sliderTarget;
+    // encoder defining for slider end
+
+    // encoder defining for arm start
+    double armTicks = 860.32;
+    double armTarget;
+    // encoder defining for arm end
+
 
     public void runOpMode() {
 
@@ -37,6 +52,7 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         // slider motor mapping start
         horizontalMotor = hardwareMap.dcMotor.get("horizontalMotor");
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        horizontalMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // slider motor mapping end
 
         // arm motor mapping start
@@ -88,6 +104,48 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         sleep(50);
     }
 
+
+    // ticks loop for slider start
+    public void slider (double turnage) {
+        sliderTarget = sliderTicks*turnage;
+        horizontalMotor.setTargetPosition((int)sliderTarget);
+        horizontalMotor.setPower(.85);
+        horizontalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (horizontalMotor.isBusy()){
+
+        }
+        sleep(50);
+
+    }
+
+    // ticks loop for slider end
+
+    // ticks loop for arm start
+    public void max (double turnage) {
+        armTarget = armTicks*turnage;
+        verticalMotor.setTargetPosition((int)armTarget);
+        verticalMotor.setPower(1);
+        verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (verticalMotor.isBusy()){
+
+        }
+        sleep(50);
+
+    }
+
+    public void begin(){
+        verticalMotor.setTargetPosition(0);
+        verticalMotor.setPower(1);
+        verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (verticalMotor.isBusy()){
+
+        }
+        sleep(50);
+    }
+    // ticks loop for arm end
 
 
 

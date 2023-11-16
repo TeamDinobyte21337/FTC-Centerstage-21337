@@ -66,7 +66,12 @@ public class TeleOpSmall extends OpMode { // first bracket
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // wheel motor mapping ending
+
 
         // slider motor mapping start
         horizontalMotor =  hardwareMap.dcMotor.get("horizontalMotor");
@@ -106,6 +111,12 @@ public class TeleOpSmall extends OpMode { // first bracket
         verticalMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
         // encoders for arm end
 
+
+        // launcher servo start
+       // launcherServo.setPosition(0);
+        // launcher servo end
+
+
     } // second end bracket
 
 
@@ -123,6 +134,7 @@ public class TeleOpSmall extends OpMode { // first bracket
         backLeftMotor.setPower(-forward - strafe - turn);
         backRightMotor.setPower( forward - strafe - turn);
         // teleop movement motor directions end
+
 
         // encoder mapping buttons for slider start
         if(gamepad2.left_bumper) {

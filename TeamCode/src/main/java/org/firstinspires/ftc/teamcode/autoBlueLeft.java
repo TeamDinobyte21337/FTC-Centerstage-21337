@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 // This is an example of how to use encoders
 // Encoders are a way to treat motors like servos
@@ -24,30 +26,89 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
     DcMotor verticalMotor;
     // arm and slider motor end
 
+    // claw servo start
+    Servo rightServo;
+    // claw servo end
+
+    // launcher servo start
+    Servo launcherServo;
+    // launcher servo start
+
+    // encoder defining for slider start
+    double sliderTicks = 1425.1;
+    double sliderTarget;
+    // encoder defining for slider end
+
+    // encoder defining for arm start
+    double armTicks = 860.32;
+    double armTarget;
+    // encoder defining for arm end
 
     public void runOpMode() {
 
+        // wheel motor mapping start
         // wheel motor mapping start
         frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // wheel motor mapping ending
 
         // slider motor mapping start
         horizontalMotor = hardwareMap.dcMotor.get("horizontalMotor");
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        horizontalMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // slider motor mapping end
 
         // arm motor mapping start
         verticalMotor = hardwareMap.dcMotor.get("verticalMotor");
         verticalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // claw servo mapping start
+        rightServo = hardwareMap.servo.get("rightServo");
+        // claw servo mapping end
+
+        // launcher servo start
+       // launcherServo.setPosition(0);
+        // launcher servo end
+
+
 
         // on startup we execute the code below this
+
         waitForStart();
 
-        encoderMovement(400, 0,0,.5);
-        encoderMovement(0, 2000,0,.5);
+        // close claw
+        rightServo.setPosition(.4);
+        sleep(500);
+
+        encoderMovement(30000, 0, 0, .5);
+
+        //move
+       // encoderMovement(1300, 0, 0, .5 );
+        //encoderMovement(0, 0, -945, .5 );
+       // encoderMovement(1900, 0, 0, .5 );
+
+        //rightServo.setPosition(.4);
+
+       // sleep(500);
+
+
+
+        //score
+      //  max(-1);
+     // slider(-0.725);
+      //  sleep(1000);
+      //  slider(-0);
+      //  max(-0);
+       // rightServo.setPosition(.58);
+        //sleep(500);
+        //slider(-0);
+        //max(-0);
     }
 
 
@@ -57,27 +118,27 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
 
         // This is still needed from earlier
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+   frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+   backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // We have entered three parameters into our position, but really we are going to set all but one of them to zero
         frontLeftMotor.setTargetPosition(-forward + strafe - turn);
-        frontRightMotor.setTargetPosition(forward + strafe - turn);
-        backLeftMotor.setTargetPosition(- forward - strafe - turn);
-        backRightMotor.setTargetPosition( forward - strafe - turn);
+    frontRightMotor.setTargetPosition(forward + strafe - turn);
+   backLeftMotor.setTargetPosition(- forward - strafe - turn);
+      backRightMotor.setTargetPosition( forward - strafe - turn);
 
         // setting the power to whatever we input into the function
         frontLeftMotor.setPower(power);
-        frontRightMotor.setPower(power);
-        backLeftMotor.setPower(power);
-        backRightMotor.setPower(power);
+   frontRightMotor.setPower(power);
+     backLeftMotor.setPower(power);
+      backRightMotor.setPower(power);
 
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+      frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+      backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy()){
@@ -85,11 +146,50 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
         }
 
         // we add a delay based off of our ms parameter
-        sleep(50);
+        sleep(150);
     }
 
+    // ticks loop for slider start
+    public void slider (double turnage) {
+        sliderTarget = sliderTicks*turnage;
+        horizontalMotor.setTargetPosition((int)sliderTarget);
+        horizontalMotor.setPower(.85);
+        horizontalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        while (horizontalMotor.isBusy()){
 
+        }
+        sleep(50);
+
+    }
+
+    // ticks loop for slider end
+
+    // ticks loop for arm start
+    public void max (double turnage) {
+        armTarget = armTicks*turnage;
+        verticalMotor.setTargetPosition((int)armTarget);
+        verticalMotor.setPower(1);
+        verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (verticalMotor.isBusy()){
+
+        }
+        sleep(50);
+
+    }
+
+    public void begin(){
+        verticalMotor.setTargetPosition(0);
+        verticalMotor.setPower(1);
+        verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (verticalMotor.isBusy()){
+
+        }
+        sleep(50);
+    }
+    // ticks loop for arm end
 
 
 
