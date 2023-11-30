@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // This is an example of how to use encoders
@@ -14,31 +15,30 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class autoRedRight extends LinearOpMode{ // first bracket
     // wheel motor starts
-    DcMotor frontLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backLeftMotor;
-    DcMotor backRightMotor;
+    private DcMotor frontLeftMotor;
+    private DcMotor frontRightMotor;
+    private DcMotor backLeftMotor;
+    private DcMotor backRightMotor;
     // wheel motor ends
 
     // arm and slider motor start
-    DcMotor horizontalMotor;
-    DcMotor verticalMotor;
+    private DcMotor horizontalMotor;
+    private DcMotor verticalMotor;
     // arm and slider motor end
 
     // claw servo start
-    Servo rightServo;
+    private  Servo rightServo;
     // claw servo end
 
     // encoder defining for slider start
-    double sliderTicks = 1425.1;
-    double sliderTarget;
+    private   double sliderTicks = 1425.1;
+    private double sliderTarget;
     // encoder defining for slider end
 
     // encoder defining for arm start
-    double armTicks = 860.32;
-    double armTarget;
+    private    double armTicks = 860.32;
+    private   double armTarget;
     // encoder defining for arm end
-
 
     public void runOpMode() {
 
@@ -47,6 +47,7 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+
         // wheel motor mapping ending
 
         // slider motor mapping start
@@ -58,12 +59,74 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         // arm motor mapping start
         verticalMotor = hardwareMap.dcMotor.get("verticalMotor");
         verticalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // claw servo mapping start
+        rightServo = hardwareMap.servo.get("rightServo");
+        // claw servo mapping end
+
+
+
 
         // on startup we execute the code below this
+
         waitForStart();
 
-        encoderMovement(400, 0,0,.5);
-        encoderMovement(0, -2000,0,.5);
+        // close claw
+        rightServo.setPosition(.4);
+        // claw is closed
+
+        sleep(500);
+
+        // driving to spot
+        encoderMovement(300, 0, 0, .9 );
+
+        sleep(500);
+
+        // arm goes back
+        max(-1);
+        // arm is done going back
+
+        // On route to spot
+        encoderMovement(0, -1200, 0, .9 );
+        encoderMovement(1100, 0, 0, .9 );
+        encoderMovement(0, 0, 925, .9 );
+        encoderMovement(665, 0, 0, .9 );
+        // made it to spot
+
+        // its time to score
+
+        // slide extends
+        slider(-.725);
+        // slider finished extending
+
+        sleep(2000);
+
+        // claw opens
+        rightServo.setPosition(.75);
+        // claw closes
+
+        sleep(3000);
+
+        // start for slider goes back to default position
+        slider(-0);
+        // slider back at default
+
+        // robot moves back to get ready to park
+        encoderMovement(-400, 0, 0, .9 );
+        // robot is done moving back
+
+        // robots arm is going down to reset ticks
+        max(0);
+        // robots arm is at default
+
+        // robot moves left to prepare to go straight and park and will first move left
+        encoderMovement(0, -1200, 0, .9 );
+        // robot is done moving more left
+
+        // robot moves forward now that it done strafing left
+        encoderMovement(300, 0, 0, .9 );
+        // robot moved forward and it now parked and its ggs ez clap
+
     }
 
 
@@ -78,10 +141,10 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // We have entered three parameters into our position, but really we are going to set all but one of them to zero
-        frontLeftMotor.setTargetPosition(-forward + strafe - turn);
+        frontLeftMotor.setTargetPosition(- (+ forward - strafe + turn));
         frontRightMotor.setTargetPosition(forward + strafe - turn);
-        backLeftMotor.setTargetPosition(- forward - strafe - turn);
-        backRightMotor.setTargetPosition( forward - strafe - turn);
+        backLeftMotor.setTargetPosition(-forward - strafe - turn);
+        backRightMotor.setTargetPosition( + forward - strafe - turn);
 
         // setting the power to whatever we input into the function
         frontLeftMotor.setPower(power);
@@ -96,14 +159,17 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy()){
-
+        while (backLeftMotor.isBusy() || backRightMotor.isBusy() || frontLeftMotor.isBusy() || frontRightMotor.isBusy()){
+            telemetry.addLine(String.valueOf(backLeftMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(backRightMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(frontLeftMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(frontRightMotor.getCurrentPosition()));
+            telemetry.update();
         }
 
         // we add a delay based off of our ms parameter
-        sleep(50);
+        sleep(150);
     }
-
 
     // ticks loop for slider start
     public void slider (double turnage) {
@@ -146,8 +212,6 @@ public class autoRedRight extends LinearOpMode{ // first bracket
         sleep(50);
     }
     // ticks loop for arm end
-
-
 
 
 

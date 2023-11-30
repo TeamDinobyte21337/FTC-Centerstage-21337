@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,6 +32,10 @@ public class TeleOpSmall extends OpMode { // first bracket
     //Servo leftServo;
     Servo rightServo;
     // claw servo end
+
+    // Servo for intake start
+   // Servo intakeServo;
+    // Servo for intake end
 
     // launcher servo start
     Servo launcherServo;
@@ -67,9 +72,8 @@ public class TeleOpSmall extends OpMode { // first bracket
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
 
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         // wheel motor mapping ending
 
 
@@ -90,7 +94,7 @@ public class TeleOpSmall extends OpMode { // first bracket
 
         // claw servo mapping start
         //leftServo = hardwareMap.servo.get("leftServo");
-       rightServo = hardwareMap.servo.get("rightServo");
+        rightServo = hardwareMap.servo.get("rightServo");
         // claw servo mapping end
 
         // launcher servo mapping start
@@ -111,12 +115,6 @@ public class TeleOpSmall extends OpMode { // first bracket
         verticalMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
         // encoders for arm end
 
-
-        // launcher servo start
-       // launcherServo.setPosition(0);
-        // launcher servo end
-
-
     } // second end bracket
 
 
@@ -129,10 +127,10 @@ public class TeleOpSmall extends OpMode { // first bracket
         // teleop movement defining end
 
         // teleop movement motor directions start
-        frontLeftMotor.setPower(-forward + strafe - turn);
+        frontLeftMotor.setPower( - forward + strafe - turn);
         frontRightMotor.setPower(forward + strafe - turn);
         backLeftMotor.setPower(-forward - strafe - turn);
-        backRightMotor.setPower( forward - strafe - turn);
+        backRightMotor.setPower( + forward - strafe - turn);
         // teleop movement motor directions end
 
 
@@ -169,7 +167,7 @@ public class TeleOpSmall extends OpMode { // first bracket
         telemetry.addData("Motor arm ticks: ", verticalMotor.getCurrentPosition());
 
         // encoder mapping button for arm end
-
+/*
         // encoder mapping button for arm hooks start
         if (gamepad2.right_stick_button) {
            upForRight(1);
@@ -179,7 +177,7 @@ public class TeleOpSmall extends OpMode { // first bracket
            upForLeft(1);
         }
         // encoder mapping button for arm hook end
-
+*/
 
        // claw servos mapping start // a opens b closes
         if (gamepad2.a){
@@ -201,6 +199,23 @@ public class TeleOpSmall extends OpMode { // first bracket
             launcherServo.setPosition(0);
         }
       // launcher servo mapping end
+
+        if (gamepad1.a){
+            //intakeServo.setPosition(.55);
+        }
+
+
+        if (gamepad1.b){
+         //   intakeServo.setPosition(.50);
+        }
+
+
+        hookFrontRightMotor.setPower(gamepad1.left_trigger);
+        hookFrontRightMotor.setPower(gamepad1.left_trigger);
+
+        hookFrontRightMotor.setPower(-gamepad1.right_trigger);
+        hookFrontRightMotor.setPower(-gamepad1.right_trigger);
+
 
     } // end of loop
 
