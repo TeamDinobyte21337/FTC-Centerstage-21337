@@ -39,7 +39,7 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
     private    double armTicks = 860.32;
     private   double armTarget;
     // encoder defining for arm end
-
+    private double i;
     public void runOpMode() {
 
         // wheel motor mapping start
@@ -72,24 +72,60 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
         waitForStart();
 
         // close claw
-        rightServo.setPosition(.45);
+        rightServo.setPosition(.4);
         // claw is closed
-        sleep(500);
-        // driving to spot
-        encoderMovement(2200, 0,0,.5);
-        sleep(200);
-        encoderMovement(0, 3900,0,.5);
-        encoderMovement(0, 0, -925, .8 );
-        // driving at spot end ready to score
 
-        //score
-        max(-1);
-        slider(-1.45);
-        sleep(3000);
-        rightServo.setPosition(.75);
-        sleep(4000);
-        slider(-0);
-        // scored 2 pixels time to win
+        sleep(500);
+
+        // driving to spot
+        encoderMovement(1000, 0, 0, .9 );
+
+        sleep(500);
+
+        // arm goes back
+     //   max(-0.9);
+        // arm is done going back
+
+        // On route to spot
+        encoderMovement(0, 1600, 0, .9 );
+     //   encoderMovement(1225, 0, 0, .9 );
+    //    encoderMovement(0, 0, -925, .9 );
+     //   encoderMovement(800, 0, 0, .9 );
+        // made it to spot
+
+        // its time to score
+
+        // slide extends
+    //    slider(1.45);
+        // slider finished extending
+
+    //    sleep(1000);
+
+        // claw opens
+  //      rightServo.setPosition(.75);
+        // claw closes
+
+   //     sleep(1000);
+
+        // start for slider goes back to default position
+    //    slider(0);
+        // slider back at default
+
+        // robot moves back to get ready to park
+   //     encoderMovement(-400, 0, 0, .9 );
+        // robot is done moving back
+
+        // robots arm is going down to reset ticks
+    //    max(0);
+        // robots arm is at default
+
+        // robot moves left to prepare to go straight and park and will first move left
+  //      encoderMovement(0, 1200, 0, .9 );
+        // robot is done moving more left
+
+        // robot moves forward now that it done strafing left
+   //     encoderMovement(300, 0, 0, .9 );
+        // robot moved forward and it now parked and its ggs ez clap
 
     }
 
@@ -128,6 +164,7 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
             telemetry.addLine(String.valueOf(backRightMotor.getCurrentPosition()));
             telemetry.addLine(String.valueOf(frontLeftMotor.getCurrentPosition()));
             telemetry.addLine(String.valueOf(frontRightMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(horizontalMotor.getCurrentPosition()));
             telemetry.update();
         }
 
@@ -137,13 +174,14 @@ public class autoBlueRight extends LinearOpMode{ // first bracket
 
     // ticks loop for slider start
     public void slider (double turnage) {
-        sliderTarget = sliderTicks*turnage;
-        horizontalMotor.setTargetPosition((int)sliderTarget);
+        sliderTarget = -sliderTicks*turnage;
+        horizontalMotor.setTargetPosition((int) sliderTarget);
         horizontalMotor.setPower(.85);
         horizontalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (horizontalMotor.isBusy()){
-
+        i = 0;
+        while (horizontalMotor.isBusy() && i<1000){
+            i=i+1;
         }
         sleep(50);
 

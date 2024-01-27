@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // This is an example of how to use encoders
@@ -39,7 +40,7 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
     private    double armTicks = 860.32;
     private   double armTarget;
     // encoder defining for arm end
-
+    private double i;
     public void runOpMode() {
 
         // wheel motor mapping start
@@ -75,44 +76,38 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
         rightServo.setPosition(.4);
         // claw is closed
 
+        encoderMovement(300, 0, 0, .4 );
+        max(-0.7);
         sleep(500);
 
-        // driving to spot
-        encoderMovement(300, 0, 0, .9 );
+        encoderMovement(1150, 0, 0, .4 );
+        encoderMovement(-375, 0, 0, .4 );
 
         sleep(500);
+        encoderMovement(0, 0, -875, .4 );
 
-        // arm goes back
-        max(-1);
-        // arm is done going back
-
-        // On route to spot
-        encoderMovement(0, 1200, 0, .9 );
-        encoderMovement(1100, 0, 0, .9 );
-        encoderMovement(0, 0, -925, .9 );
-        encoderMovement(665, 0, 0, .9 );
-        // made it to spot
-
-        // its time to score
 
         // slide extends
-        slider(-.725);
+        slider(1.45);
         // slider finished extending
 
-        sleep(2000);
+        sleep(1000);
+        encoderMovement(1250, 0, 0, .4 );
 
         // claw opens
         rightServo.setPosition(.75);
         // claw closes
 
-        sleep(3000);
+        sleep(500);
+        rightServo.setPosition(.4);
+        encoderMovement(-475, 0, 0, .4 );
 
         // start for slider goes back to default position
-        slider(-0);
+        slider(0);
         // slider back at default
 
         // robot moves back to get ready to park
-        encoderMovement(-400, 0, 0, .9 );
+        //  encoderMovement(-200, 0, 0, .65 );
         // robot is done moving back
 
         // robots arm is going down to reset ticks
@@ -120,11 +115,11 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
         // robots arm is at default
 
         // robot moves left to prepare to go straight and park and will first move left
-        encoderMovement(0, 1200, 0, .9 );
+        encoderMovement(0, 1200, 0, .7 );
         // robot is done moving more left
 
         // robot moves forward now that it done strafing left
-        encoderMovement(300, 0, 0, .9 );
+        encoderMovement(1500, 0, 0, .4 );
         // robot moved forward and it now parked and its ggs ez clap
 
     }
@@ -141,29 +136,30 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
         backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // We have entered three parameters into our position, but really we are going to set all but one of them to zero
-    frontLeftMotor.setTargetPosition(- (+ forward - strafe + turn));
-     frontRightMotor.setTargetPosition(forward + strafe - turn);
-     backLeftMotor.setTargetPosition(-forward - strafe - turn);
-      backRightMotor.setTargetPosition( + forward - strafe - turn);
+        frontLeftMotor.setTargetPosition(- (+ forward - strafe + turn));
+        frontRightMotor.setTargetPosition(forward + strafe - turn);
+        backLeftMotor.setTargetPosition(-forward - strafe - turn);
+        backRightMotor.setTargetPosition( + forward - strafe - turn);
 
         // setting the power to whatever we input into the function
-     frontLeftMotor.setPower(power);
-       frontRightMotor.setPower(power);
+        frontLeftMotor.setPower(power);
+        frontRightMotor.setPower(power);
         backLeftMotor.setPower(power);
         backRightMotor.setPower(power);
 
 
-      frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         while (backLeftMotor.isBusy() || backRightMotor.isBusy() || frontLeftMotor.isBusy() || frontRightMotor.isBusy()){
-          telemetry.addLine(String.valueOf(backLeftMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(backLeftMotor.getCurrentPosition()));
             telemetry.addLine(String.valueOf(backRightMotor.getCurrentPosition()));
             telemetry.addLine(String.valueOf(frontLeftMotor.getCurrentPosition()));
             telemetry.addLine(String.valueOf(frontRightMotor.getCurrentPosition()));
+            telemetry.addLine(String.valueOf(horizontalMotor.getCurrentPosition()));
             telemetry.update();
         }
 
@@ -173,13 +169,14 @@ public class autoBlueLeft extends LinearOpMode{ // first bracket
 
     // ticks loop for slider start
     public void slider (double turnage) {
-        sliderTarget = sliderTicks*turnage;
-        horizontalMotor.setTargetPosition((int)sliderTarget);
+        sliderTarget = -sliderTicks*turnage;
+        horizontalMotor.setTargetPosition((int) sliderTarget);
         horizontalMotor.setPower(.85);
         horizontalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (horizontalMotor.isBusy()){
-
+        i = 0;
+        while (horizontalMotor.isBusy() && i<1000){
+            i=i+1;
         }
         sleep(50);
 

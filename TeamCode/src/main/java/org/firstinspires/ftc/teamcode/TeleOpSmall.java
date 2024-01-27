@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PWMOutput;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -41,6 +43,7 @@ public class TeleOpSmall extends OpMode { // first bracket
     Servo launcherServo;
     // launcher servo end
 
+
     // encoder defining for slider start
     double sliderTicks = 1425.1;
     double sliderTarget;
@@ -51,9 +54,11 @@ public class TeleOpSmall extends OpMode { // first bracket
     double armTarget;
     // encoder defining for arm end
 
+
     // encoder defining for hook arm right motor start
-    double hookTicksRight = 537.7;
-    double hookTargetRight;
+    //double hookTicksRight = -537.7;
+
+    double hookTarget;
     // encoder defining for hook arm right motor end
 
     // encoder defining for hook arm left motor start
@@ -90,6 +95,17 @@ public class TeleOpSmall extends OpMode { // first bracket
         // hook motor mapping start
         hookFrontRightMotor = hardwareMap.dcMotor.get("hookFrontRightMotor");
         hookFrontLeftMotor = hardwareMap.dcMotor.get("hookFrontLeftMotor");
+
+        /*
+        hookFrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hookFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hookFrontRightMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        hookFrontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hookFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hookFrontLeftMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
+*/
+
         // hook motor mapping end
 
         // claw servo mapping start
@@ -102,8 +118,9 @@ public class TeleOpSmall extends OpMode { // first bracket
         // launcher servo mapping end
 
         // encoders for slider start
-        horizontalMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        horizontalMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
         // encoders for slider end
@@ -180,14 +197,15 @@ public class TeleOpSmall extends OpMode { // first bracket
 */
 
        // claw servos mapping start // a opens b closes
-        if (gamepad2.a){
-            //leftServo.setPosition(1);
-            rightServo.setPosition(.58);
-        }
         if (gamepad2.b){
-            //leftServo.setPosition(.83);
-           rightServo.setPosition(.4);
+            //leftServo.setPosition(1);
+            rightServo.setPosition(.5);
         }
+        if (gamepad2.a){
+            //leftServo.setPosition(.83);
+           rightServo.setPosition(.85);
+        }
+
       // claw servos mapping ending
 
       // launcher servo mapping start
@@ -210,11 +228,21 @@ public class TeleOpSmall extends OpMode { // first bracket
         }
 
 
-        hookFrontRightMotor.setPower(gamepad1.left_trigger);
-        hookFrontRightMotor.setPower(gamepad1.left_trigger);
+       // if (gamepad1.right_bumper) {
+       //     up(.25);
+       // }
 
-        hookFrontRightMotor.setPower(-gamepad1.right_trigger);
-        hookFrontRightMotor.setPower(-gamepad1.right_trigger);
+      //  if (gamepad1.left_bumper) {
+       //     up(0);
+       // }
+
+        hookFrontLeftMotor.setPower(gamepad1.left_trigger);
+        hookFrontRightMotor .setPower(gamepad1.left_trigger);
+
+        hookFrontLeftMotor.setPower(-gamepad1.right_trigger);
+        hookFrontRightMotor .setPower(-gamepad1.right_trigger);
+
+
 
 
     } // end of loop
@@ -254,20 +282,23 @@ public class TeleOpSmall extends OpMode { // first bracket
     // ticks loop for arm end
 
     // ticks loop for front right hook start
-    public void upForRight(double turnage) {
-        hookTargetRight = hookTicksRight*turnage;
-        hookFrontRightMotor.setTargetPosition((int)hookTargetRight);
-        hookFrontRightMotor.setPower(-.4);
+   /* public void up(double turnage) {
+        hookTarget = hookTicksRight*turnage;
+        hookFrontLeftMotor.setTargetPosition((int)hookTarget);
+
+        hookFrontRightMotor.setTargetPosition((int)hookTarget);
+        hookFrontRightMotor.setPower(1);
+        hookFrontLeftMotor.setPower(-1);
+        hookFrontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hookFrontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    }
 
-    public void upForLeft(double turnage) {
-        hookTargetLeft = hookTicksLeft*turnage;
-        hookFrontLeftMotor.setTargetPosition((int)hookTargetLeft);
-        hookFrontLeftMotor.setPower(.4);
-        hookFrontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+*/
+
+
+
+
 
     // ticks loop for front right hook start
 
